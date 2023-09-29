@@ -1,17 +1,17 @@
-ArrayList<Triangle> tris = new ArrayList<Triangle>();
+//PRISM RENDERER//
+
+//List of triangles that will be rendered to the screen
+static ArrayList<Triangle> tris = new ArrayList<Triangle>();
+//Line width of triangles
 float stroke_size = 3;
+//Angles for calculating rotation
 static float camera_x_angle = 0;
 static float camera_y_angle = 0;
+//The field of view of camera (zoom)
 static float camera_fov = 1;
 
+//How sensitive the screen is to rotation
 float mouse_sensitivity = 1;
-float mouse_delta_x = 0;
-float mouse_delta_y = 0;
-float mouse_initial_origin_x = 0;
-float mouse_initial_origin_y = 0;
-
-float min_x_rot = 1.8;
-float max_x_rot = 2.6;
 
 PVector origin = new PVector(1, 1, 1);
 PVector x = new PVector(200, 0, 0);
@@ -20,23 +20,15 @@ PVector z = new PVector(0, 0, 200);
 
 void setup()
 {
+  //Set default line preferences
   strokeWeight(stroke_size);
   stroke(255);
+  //set size of screen
   size(700, 700);
- 
-  calculate_prim_vertecies();
- 
-  float poly_size = 50;
-  PVector vert1 = new PVector(poly_size, poly_size, poly_size);
-  PVector vert2 = new PVector(-poly_size, -poly_size, poly_size);
-  PVector vert3 = new PVector(-poly_size, poly_size, -poly_size);
-  PVector vert4 = new PVector(poly_size, -poly_size, -poly_size);
- 
-  Triangle tri1 = new Triangle(new PVector[] {vert1, vert2, vert3}, new float[] {255, 255, 255});
-  Triangle tri2 = new Triangle(new PVector[] {vert1, vert2, vert4}, new float[] {255, 255, 255});
-  Triangle tri3 = new Triangle(new PVector[] {vert3, vert4, vert1}, new float[] {255, 255, 255});
-  Triangle tri4 = new Triangle(new PVector[] {vert3, vert4, vert2}, new float[] {255, 255, 255});
- 
+ //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
+  load_primatives();
+  
+  //Draw XYZ Axes
   Triangle x_axis = new Triangle(new PVector[] {origin, x, origin}, new float[] {255, 0, 0});
   Triangle y_axis = new Triangle(new PVector[] {origin, y, origin}, new float[] {0, 255, 0});
   Triangle z_axis = new Triangle(new PVector[] {origin, z, origin}, new float[] {0, 0, 255});
@@ -44,24 +36,31 @@ void setup()
   tris.add(x_axis);
   tris.add(y_axis);
   tris.add(z_axis);
-  tris.add(tri1);
-  tris.add(tri2);
-  tris.add(tri3);
-  tris.add(tri4);
+  
+  //Spawn Prims
+  spawn_primative("Cube", 1, 0, 0, 0, new float[] {255, 255, 255});
 }
 
-void draw(){
+void draw()
+{  
   background(0);
-  for(Triangle tri : tris){
+ 
+  for(Triangle tri : tris)
+  {
+    //Set line color to specified line color (each triangle has one)
     stroke(tri.triangle_color[0], tri.triangle_color[1], tri.triangle_color[2]);
+    //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
     PVector[] screen_coords = to_screen_coords(tri.vertecies);
+    //Draw lines connecting the 3 vertecies of the triangle
     line(screen_coords[0].x + width/2, screen_coords[0].y + height/2, screen_coords[1].x+ width/2, screen_coords[1].y + height/2);
     line(screen_coords[1].x + width/2, screen_coords[1].y + height/2, screen_coords[2].x+ width/2, screen_coords[2].y + height/2);
     line(screen_coords[2].x + width/2, screen_coords[2].y + height/2, screen_coords[0].x+ width/2, screen_coords[0].y + height/2);
   }
 }
 
-void mouseDragged(){
+void mouseDragged()
+{
+  //Change screen rotation based on position of mouse
   camera_x_angle = radians(int(mouseX*mouse_sensitivity));
   camera_y_angle = radians(int(mouseY*mouse_sensitivity));
 }
