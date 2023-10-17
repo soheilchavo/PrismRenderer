@@ -8,3 +8,6 @@ class Triangle {
     triangle_color = col;
   }
 }
+
+
+enum RENDERING_METHOD { wireframe_simple, solid, none };
