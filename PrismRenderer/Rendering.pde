@@ -4,6 +4,8 @@ void draw_solid(){
     
     loadPixels();
     
+    for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
+    
     for(Triangle tri : tris)
     {
       //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
@@ -13,28 +15,44 @@ void draw_solid(){
       int[] triangle_bounds_indecies = get_rect_indecies_of_tri(triangle_bounds);
       
       for(int i = 0; i < triangle_bounds.length; i++){
-        if(triangle_bounds_indecies[i] < pixels.length && is_point_in_tri(triangle_bounds[i], screen_coords)){
-          pixels[triangle_bounds_indecies[i]] = color(tri.triangle_color[0],tri.triangle_color[1],tri.triangle_color[2]);
+        
+        int index = triangle_bounds_indecies[i];
+        boolean in_tri = is_point_in_tri(triangle_bounds[i], screen_coords);
+        if(in_tri){
+          
+          //float depth = get_tri_point_depth(screen_coords, triangle_bounds[i]);
+          float depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z);
+          if(z_buffer[index] < depth){
+            boolean on_edge = is_point_on_tri_edge(triangle_bounds[i], screen_coords);
+           
+            color pixel_col = tri.triangle_color;
+            
+            if(on_edge)
+              pixel_col = tri.line_color;
+            
+            pixels[index] = pixel_col;
+            z_buffer[index] = depth;
+          }
         }
       }
       
-     }
+    }
     
     updatePixels();
 }
 
-void draw_wireframe_simple()
+void draw_wireframe()
 {
   for(Triangle tri : tris)
   {
     //Set line color to specified line color (each triangle has one)
-    stroke(tri.triangle_color[0], tri.triangle_color[1], tri.triangle_color[2]);
+    stroke(tri.line_color);
     //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
     PVector[] screen_coords = to_screen_coords(tri.vertecies);
     //Draw circle at every vertex
     for(PVector v: screen_coords)
     {
-      fill(tri.triangle_color[0], tri.triangle_color[1], tri.triangle_color[2]);
+      fill(tri.triangle_color);
       circle(v.x, v.y, vertex_circle_size);
     }
     //Draw lines connecting the 3 vertecies of the triangle

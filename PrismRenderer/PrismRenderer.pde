@@ -14,8 +14,9 @@
 //ADD OBJECTS HERE: (Shapes are: Tetrahedron, Cube, Triangle, Plane, Cylinder)
 
 String[][] initial_objs = new String[][] {
-  //            Shape         Scale    x    y    z,    r      g      b
-  new String[] {"Triangle", "0.5", "0", "0", "0", "255", "255", "255"},
+  //            Shape         Scale    x    y    z,    r      g      b      r   g    b for line
+  new String[] {"Triangle", "0.5", "0", "0", "0", "255", "0", "0", "0", "0", "0"},
+  new String[] {"Tetrahedron", "0.7", "0", "0", "5", "255", "255", "255", "0", "0", "0"}
 };
 
 //Try turning on x,y,z axes!
@@ -29,8 +30,8 @@ float stroke_size = 4;
 //Size of the vertex circles
 float vertex_circle_size = 7;
 //Angles for calculating rotation
-static float camera_x_angle = 5.5;
-static float camera_y_angle = 3.5;
+static float camera_x_angle = 0;
+static float camera_y_angle = 0;
 static PVector camera_vector = new PVector();
 //The field of view of camera (zoom)
 static float camera_fov = 2;
@@ -48,13 +49,23 @@ PVector y = new PVector(0, 200, 0);
 PVector z = new PVector(0, 0, 200);
 
 //How much the rasterization algorithm is given slack
-float rasterization_slack = 70;
+float rasterization_slack = 1;
+//How much the line fill algorithm is given slack
+float line_thickness = 1;
 
-//enum RENDERING_METHOD { wireframe_simple, solid, none };
+float[] z_buffer;
+
+//enum RENDERING_METHOD { wireframe, solid, none };
 RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 
 void setup()
 {
+  //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
+  
+  //set all z buffers to negative infinity
+  z_buffer = new float[width*height];
+  for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
+  
   //Set default line preferences
   strokeWeight(stroke_size);
   stroke(255);
@@ -78,7 +89,7 @@ void setup()
   //Spawn Prims
   for(String[] prim: initial_objs)
   {
-    spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), new float[] {parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])});
+    spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), color(parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])), color(parseInt(prim[8]), parseInt(prim[9]), parseInt(prim[10])));
   }
   
   //loadPixels();
@@ -91,15 +102,16 @@ void setup()
 void draw()
 {  
   if(primary_rendering_method != RENDERING_METHOD.none){
-    background(0);
+    background(50,50,50);
    
     calc_camera_vector();
     
-    if (primary_rendering_method == RENDERING_METHOD.wireframe_simple)
-      draw_wireframe_simple();
+    if (primary_rendering_method == RENDERING_METHOD.wireframe)
+      draw_wireframe();
     
-    if (primary_rendering_method == RENDERING_METHOD.solid)
+    if (primary_rendering_method == RENDERING_METHOD.solid){
       draw_solid();
+    }
   }
   
 }
@@ -114,7 +126,7 @@ void mouseDragged()
 void mouseWheel(MouseEvent event)
 {
   //Zoom in or out the camera
-  camera_fov = clamp(camera_fov - event.getCount()*0.05, 0.1, 3);
+  camera_fov = clamp(camera_fov - event.getCount()*0.05, 0.01, 4);
 }
 
 void keyPressed(){

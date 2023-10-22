@@ -107,7 +107,7 @@ void load_primatives()
 }
 
 //Adds new primative
-void spawn_primative(String type, float scale, float x_translate, float y_translate, float z_translate, float[] col)
+void spawn_primative(String type, float scale, float x_translate, float y_translate, float z_translate, color col, color line_col)
 {
   //Grab triangle info from prim array
   ArrayList<Triangle> prim_tris = (ArrayList<Triangle>) prims.get(prim_order.indexOf(type));
@@ -124,8 +124,8 @@ void spawn_primative(String type, float scale, float x_translate, float y_transl
       cloned_verts[i].z = tri.vertecies[i].z*scale + z_translate;
     }
     //Add new triangle to the list of triangles to be rendered every frame
-    Triangle cloned_tri = new Triangle(cloned_verts, tri.triangle_color.clone());
-    cloned_tri.triangle_color = col; 
+    Triangle cloned_tri = new Triangle(cloned_verts, col, line_col);
+    //cloned_tri.triangle_color = col; 
     
     PrismRenderer.tris.add(cloned_tri);
   }
