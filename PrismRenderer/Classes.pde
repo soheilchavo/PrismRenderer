@@ -21,15 +21,16 @@ class Line {
 
   PVector a;
   PVector b;
-  float thickness;
+  color col;
   
-  Line(PVector c, PVector d, float t){
+  Line(PVector c, PVector d, color t){
     this.a = c;
     this.b = d;
-    this.thickness = t;
+    this.col = t;
   }
 
 }
 
 
 enum RENDERING_METHOD { wireframe, solid, none };
+enum RASTERIZATION_ALGORITHM { painters, pixel };

@@ -15,8 +15,8 @@
 
 String[][] initial_objs = new String[][] {
   //            Shape         Scale    x    y    z,    r      g      b      r   g    b for line
-  new String[] {"Triangle", "0.5", "0", "0", "0", "255", "0", "0", "0", "0", "0"},
-  new String[] {"Tetrahedron", "0.7", "0", "0", "5", "255", "255", "255", "0", "0", "0"}
+  new String[] {"Tetrahedron", "0.7", "0", "0", "5", "255", "255", "255", "0", "0", "0"},
+  new String[] {"Triangle", "0.7", "0", "0", "100", "255", "0", "255", "0", "0", "0"}
 };
 
 //Try turning on x,y,z axes!
@@ -25,6 +25,7 @@ boolean axes_on = true;
 
 //List of triangles that will be rendered to the screen
 static ArrayList<Triangle> tris = new ArrayList<Triangle>();
+static ArrayList<Line> lines = new ArrayList<Line>();
 //Line width of triangles
 float stroke_size = 4;
 //Size of the vertex circles
@@ -50,18 +51,18 @@ PVector z = new PVector(0, 0, 200);
 
 //How much the rasterization algorithm is given slack
 float rasterization_slack = 1;
+RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
 //How much the line fill algorithm is given slack
-float line_thickness = 1;
-
+float line_thickness = 2;
+//Depth value for every pixel
 float[] z_buffer;
-
 //enum RENDERING_METHOD { wireframe, solid, none };
 RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 
 void setup()
 {
   //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
-  
+  println(is_point_on_shape_edge(new PVector(4,55), new PVector[] { new PVector(0,-100), new PVector(0,24) }));
   //set all z buffers to negative infinity
   z_buffer = new float[width*height];
   for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
@@ -78,13 +79,12 @@ void setup()
   //Draw XYZ Axes
   if(axes_on)
   {
-    Triangle x_axis = new Triangle(new PVector[] {origin, x, origin}, new float[] {255, 0, 0});
-    Triangle y_axis = new Triangle(new PVector[] {origin, y, origin}, new float[] {0, 255, 0});
-    Triangle z_axis = new Triangle(new PVector[] {origin, z, origin}, new float[] {0, 0, 255});
-   
-    tris.add(x_axis);
-    tris.add(y_axis);
-    tris.add(z_axis);
+    Line x_axis = new Line(origin, x, color (255, 0, 0));
+    Line y_axis = new Line(origin, y, color (0, 255, 0));
+    Line z_axis = new Line(origin, z, color (0, 0, 255));
+    lines.add(x_axis);
+    lines.add(y_axis);
+    lines.add(z_axis);
   }
   //Spawn Prims
   for(String[] prim: initial_objs)
