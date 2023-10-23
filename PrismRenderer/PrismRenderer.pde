@@ -16,7 +16,7 @@
 String[][] initial_objs = new String[][] {
   //            Shape         Scale    x    y    z,    r      g      b      r   g    b for line
   new String[] {"Cube", "25", "0", "0", "5", "255", "255", "255", "0", "0", "0"},
-  new String[] {"Tetrahedron", "50", "50", "0", "100", "255", "0", "255", "0", "0", "0"},
+  new String[] {"Monkey", "50", "50", "0", "100", "255", "0", "255", "0", "0", "0"},
 };
 
 //Try turning on x,y,z axes!
@@ -59,6 +59,11 @@ float[] z_buffer;
 //enum RENDERING_METHOD { wireframe, solid, none };
 RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 
+
+//Optomization
+float prev_time = 0;
+float curr_time = 0;
+
 void setup()
 {
   //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
@@ -100,7 +105,9 @@ void setup()
 }
 
 void draw()
-{  
+{
+  
+  curr_time = millis();
   if(primary_rendering_method != RENDERING_METHOD.none){
     background(50,50,50);
    
@@ -114,6 +121,10 @@ void draw()
     }
   }
   
+  //if (prev_time != 0)
+  //  noLoop();
+  //  print((curr_time-prev_time)/1000);
+  prev_time = curr_time;
 }
 
 void mouseDragged()
@@ -167,7 +178,7 @@ void set_inital_camera()
 {
   camera_x_angle = 5.5;
   camera_y_angle = 3.59;
-  camera_fov = 1.75;
+  camera_fov = 1;
   camera_x_shift = 0;
   camera_y_shift = 24;
 }

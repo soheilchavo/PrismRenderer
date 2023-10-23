@@ -44,17 +44,39 @@ int [] get_rect_indecies_of_tri(PVector[] values) {
 
 boolean is_point_in_tri(PVector point, PVector[] tri) {
 
-  float area_of_tri = area_triangle(tri[0], tri[1], tri[2]);
+  ////OLD RAST ALG
+  //float area_of_tri = area_triangle(tri[0], tri[1], tri[2]);
 
-  float area_tri_point_1 = area_triangle(point, tri[1], tri[2]);
-  float area_tri_point_2 = area_triangle(tri[0], point, tri[2]);
-  float area_tri_point_3 = area_triangle(tri[0], tri[1], point);
+  //float area_tri_point_1 = area_triangle(point, tri[1], tri[2]);
+  //float area_tri_point_2 = area_triangle(tri[0], point, tri[2]);
+  //float area_tri_point_3 = area_triangle(tri[0], tri[1], point);
 
-  if (((area_tri_point_1+area_tri_point_2+area_tri_point_3) - area_of_tri) <= rasterization_slack)
-    return true;
-  else
-    return false;
+  //if (((area_tri_point_1+area_tri_point_2+area_tri_point_3) - area_of_tri) <= rasterization_slack)
+  //  return true;
+  //else
+  //  return false;
+  
+  //New RAST ALG (WAY FASTER)
+  
+  float d1, d2, d3;
+  boolean has_neg, has_pos;
+
+  d1 = sign(point, tri[0], tri[1]);
+  d2 = sign(point, tri[1], tri[2]);
+  d3 = sign(point, tri[2], tri[0]);
+
+  has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+  has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+  return !(has_neg && has_pos);
+  
 }
+
+float sign (PVector p1, PVector p2, PVector p3)
+{
+    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+}
+
 
 boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
   
@@ -70,16 +92,16 @@ boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
   for (float[] equation : equations) {
     
     //If there is a vertical line
-    if(abs(equation[1])<=3){
-      if(dist(point.x, point.y, -(-equation[2])/equation[0],point.y) <= line_thickness) { return true; }
-    }
+    //if(abs(equation[1])<=3){
+    //  if(dist(point.x, point.y, -(-equation[2])/equation[0],point.y) <= line_thickness) { return true; }
+    //}
     
-    else{
+    //else{
       float num = abs(equation[0]*point.x + equation[1]*point.y + equation[2]);
       float dem = sqrt(pow(equation[0],2)+pow(equation[1],2));
       if (num/dem <= line_thickness)
         return true;
-    }
+    //}
   }
 
   return false;

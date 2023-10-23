@@ -1,5 +1,3 @@
-import java.nio.file.Paths;
-
 //List of prebuilt vertecies for Primatives (Cube, Plane, etc)
 ArrayList vertecies = new ArrayList<PVector>();
 //List of prebuilt primatives
