@@ -15,6 +15,12 @@ class Triangle {
     triangle_color = col;
     line_color = line_col;
   }
+  
+  Triangle(PVector[] verts, color col){
+    vertecies = verts;
+    triangle_color = col;
+    line_color = col;
+  }
 }
 
 class Line {

@@ -15,8 +15,8 @@
 
 String[][] initial_objs = new String[][] {
   //            Shape         Scale    x    y    z,    r      g      b      r   g    b for line
-  new String[] {"Tetrahedron", "0.7", "0", "0", "5", "255", "255", "255", "0", "0", "0"},
-  new String[] {"Triangle", "0.7", "0", "0", "100", "255", "0", "255", "0", "0", "0"}
+  new String[] {"Cube", "25", "0", "0", "5", "255", "255", "255", "0", "0", "0"},
+  new String[] {"Tetrahedron", "50", "50", "0", "100", "255", "0", "255", "0", "0", "0"},
 };
 
 //Try turning on x,y,z axes!
@@ -62,7 +62,7 @@ RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 void setup()
 {
   //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
-  println(is_point_on_shape_edge(new PVector(4,55), new PVector[] { new PVector(0,-100), new PVector(0,24) }));
+  //println(is_point_on_shape_edge(new PVector(4,55), new PVector[] { new PVector(0,-100), new PVector(0,24) }));
   //set all z buffers to negative infinity
   z_buffer = new float[width*height];
   for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
