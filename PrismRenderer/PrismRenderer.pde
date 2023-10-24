@@ -15,12 +15,25 @@
 
 String[][] initial_objs = new String[][] {
   //            Shape         Scale    x    y    z,   r      g      b     lr   lg    lb 
-  new String[] {"Icosahedron", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Monkey", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
+};
+
+Obj[] objects = new Obj[] {
+
+  new Obj(
+    "Suzzane", //Name
+    "Monkey", //Prim type
+    new Material[] { new Material(color(1),0,0,0)},
+    new PVector(0,0,0),
+    new PVector(25,25,25),
+    new PVector(0,0,0)
+  )
+  
 };
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
-boolean render_lines = false;
+boolean render_lines = true;
 /////////////////////////////////////////////////////////
 
 //List of triangles that will be rendered to the screen
@@ -76,7 +89,7 @@ void setup()
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(900, 900);
+  size(600, 600);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
