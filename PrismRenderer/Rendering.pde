@@ -27,9 +27,9 @@ void draw_solid(){
           if(z_buffer[index] < depth){
             boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
            
-            color pixel_col = tri.triangle_color;
+            color pixel_col = color(depth);
             
-            if(on_edge)
+            if(on_edge && render_lines)
               pixel_col = tri.line_color;
             
             pixels[index] = pixel_col;

@@ -27,14 +27,28 @@ void load_primatives()
           model_vertecies.add(new PVector(float(lineArray[1]), float(lineArray[2]), float(lineArray[3])));
         }
         if (lineArray[0].contains("f") && lineArray[0].length() == 1) {
-          model_triangles.add(new Triangle ( new PVector[] {
-            model_vertecies.get(int(str(lineArray[1].charAt(0)))-1),
-            model_vertecies.get(int(str(lineArray[2].charAt(0)))-1),
-            model_vertecies.get(int(str(lineArray[3].charAt(0)))-1)
-          }, color(1)
-          ));
+          
+          if(lineArray[1].contains("/")){
+          
+            model_triangles.add(new Triangle ( new PVector[] {
+              model_vertecies.get(int(lineArray[1].substring(0,lineArray[1].indexOf("/")))-1),
+              model_vertecies.get(int(lineArray[2].substring(0,lineArray[2].indexOf("/")))-1),
+              model_vertecies.get(int(lineArray[3].substring(0,lineArray[3].indexOf("/")))-1)
+            }, color(1)
+            ));
+          }
+          
+          else{
+            model_triangles.add(new Triangle ( new PVector[] {
+              model_vertecies.get(int(lineArray[1])-1),
+              model_vertecies.get(int(lineArray[2])-1),
+              model_vertecies.get(int(lineArray[3])-1)
+            }, color(1)
+            ));
+          }
         }
       }
+      
     }
     catch(IOException ie) { print("non-existent model path"); }
 

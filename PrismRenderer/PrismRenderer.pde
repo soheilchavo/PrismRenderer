@@ -15,12 +15,17 @@
 
 String[][] initial_objs = new String[][] {
   //            Shape         Scale    x    y    z,    r      g      b      r   g    b for line
-  new String[] {"Cube", "25", "0", "0", "5", "255", "255", "255", "0", "0", "0"},
-  new String[] {"Monkey", "50", "50", "0", "100", "255", "0", "255", "0", "0", "0"},
+  new String[] {"Icosahedron", "34", "80", "0", "0", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Cube", "34", "0", "0", "80", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Monkey", "34", "80", "80", "0", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Triangle", "34", "80", "-80", "0", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Sphere", "34", "80", "80", "80", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Tetrahedron", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
 };
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
+boolean render_lines = true;
 /////////////////////////////////////////////////////////
 
 //List of triangles that will be rendered to the screen
@@ -53,7 +58,7 @@ PVector z = new PVector(0, 0, 200);
 float rasterization_slack = 1;
 RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
 //How much the line fill algorithm is given slack
-float line_thickness = 2;
+float line_thickness = 1;
 //Depth value for every pixel
 float[] z_buffer;
 //enum RENDERING_METHOD { wireframe, solid, none };
