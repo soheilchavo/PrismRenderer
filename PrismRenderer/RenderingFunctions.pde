@@ -94,11 +94,20 @@ boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
     //If there is a vertical line
     float[] equation = get_line_equation(comb[0], comb[1]);
     
+    //  if(abs(-equation[0]/equation[1]) < 0.5){
+    //    return true;
+        //if(abs(point.x-((-equation[0]/equation[1])*point.y)-equation[2])<2){
+        //  return true;
+        //}
+      //}
+      
+      //else{
       float num = abs(equation[0]*point.x + equation[1]*point.y + equation[2]);
       float dem = sqrt(pow(equation[0],2)+pow(equation[1],2));
       
       if (num/dem <= line_thickness)
         return true;
+      //}
     
     //comb[0] = first vertex of line, comb[1] = second vertex of line
     //point = the point
@@ -132,6 +141,14 @@ PVector get_triangle_normal(PVector[] tri) {
   return n;
 }
 
+float calculate_k_constant(PVector vertex, PVector normal){
+  return (normal.x*(vertex.x)+normal.y*(vertex.y)+normal.z*(vertex.z));
+}
+
+float calculate_z_from_plane(float k, PVector n, PVector point){
+  return -(k + n.x*point.x + n.y*point.y)/n.z;
+}
+
 float get_tri_point_depth(PVector[] tri, PVector point_screen) {
   //Find the equation of the plane
   //Get normal vector of triangle
@@ -143,10 +160,10 @@ float get_tri_point_depth(PVector[] tri, PVector point_screen) {
   point = to_global_coords_point(point_screen);
 
   //Calculate constant in plane equation
-  float k = -(u.x*(tri[0].x)+u.y*(tri[0].y)+u.z*(tri[0].z));
+  float k = calculate_k_constant(tri[0], u);
 
   //plug point in to get the z coord
-  point.z = -(k + u.x*point.x + u.y*point.y)/u.z;
+  point.z = calculate_z_from_plane(k,u,point);
   //println(u,k);
 
   //return distance of point from camera

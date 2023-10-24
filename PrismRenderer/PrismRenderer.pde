@@ -15,7 +15,9 @@
 
 String[][] initial_objs = new String[][] {
   //            Shape         Scale    x    y    z,   r      g      b     lr   lg    lb 
-  new String[] {"Monkey", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
+  new String[] {"Triangle", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
+  //new String[] {"Tetrahedron", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
+  
 };
 
 Obj[] objects = new Obj[] {
@@ -33,7 +35,7 @@ Obj[] objects = new Obj[] {
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
-boolean render_lines = true;
+boolean render_lines = false;
 /////////////////////////////////////////////////////////
 
 //List of triangles that will be rendered to the screen
@@ -64,7 +66,7 @@ PVector z = new PVector(0, 0, 200);
 
 //How much the rasterization algorithm is given slack
 float rasterization_slack = 1;
-RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
+RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.pixel;
 //How much the line fill algorithm is given slack
 float line_thickness = 1;
 //Depth value for every pixel
@@ -121,8 +123,11 @@ void draw()
 {
   
   curr_time = millis();
+  
   if(primary_rendering_method != RENDERING_METHOD.none){
     background(50,50,50);
+    
+  
    
     calc_camera_vector();
     
@@ -132,6 +137,15 @@ void draw()
     if (primary_rendering_method == RENDERING_METHOD.solid){
       draw_solid();
     }
+    
+    PVector[] tri = tris.get(0).vertecies;
+    PVector n = get_triangle_normal(tri);
+    float k_1 = calculate_k_constant(tri[0], n);
+    PVector point = new PVector(width/2,height/2);
+    float z = calculate_z_from_plane(k_1,n,point);
+    
+    fill(color(z*0.5,0,0));
+    circle(point.x,point.y,40);
   }
   
   //if (prev_time != 0)

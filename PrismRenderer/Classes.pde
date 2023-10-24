@@ -57,7 +57,7 @@ class Obj{
   String name;
   
   Obj(String n, String t, Material[] m, PVector p, PVector s, PVector r){
-    this.obj_triangles = get_prim_tris(t);
+    this.obj_triangles = new Triangle[1];
     this.obj_materials = m;
     this.scale = s;
     this.rotation = r;
