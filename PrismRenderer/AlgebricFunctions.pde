@@ -139,6 +139,15 @@ PVector vector_cross_product(PVector a, PVector b) {
     );
 }
 
+float vector_dot_product(PVector a, PVector b) {
+  return (a.mag())*(b.mag())*cos(angle_between_vectors(a,b));
+}
+
+float angle_between_vectors(PVector a, PVector b){
+  return asin(vector_cross_product(a,b).mag()/(a.mag()*b.mag()));
+}
+
+
 PVector normalize_vector(PVector v) {
 
   float len = dist_3d(new PVector(0, 0, 0), v);

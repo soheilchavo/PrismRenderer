@@ -14,18 +14,13 @@
 //ADD OBJECTS HERE: (Shapes are: Tetrahedron, Cube, Triangle, Plane, Cylinder)
 
 String[][] initial_objs = new String[][] {
-  //            Shape         Scale    x    y    z,    r      g      b      r   g    b for line
-  new String[] {"Icosahedron", "34", "80", "0", "0", "255", "180", "210", "15", "10", "20"},
-  new String[] {"Cube", "34", "0", "0", "80", "255", "180", "210", "15", "10", "20"},
-  new String[] {"Monkey", "34", "80", "80", "0", "255", "180", "210", "15", "10", "20"},
-  new String[] {"Triangle", "34", "80", "-80", "0", "255", "180", "210", "15", "10", "20"},
-  new String[] {"Sphere", "34", "80", "80", "80", "255", "180", "210", "15", "10", "20"},
-  new String[] {"Tetrahedron", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
+  //            Shape         Scale    x    y    z,   r      g      b     lr   lg    lb 
+  new String[] {"Icosahedron", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
 };
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
-boolean render_lines = true;
+boolean render_lines = false;
 /////////////////////////////////////////////////////////
 
 //List of triangles that will be rendered to the screen
