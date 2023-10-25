@@ -44,9 +44,9 @@ class Line {
 
 }
 
-class Obj{
+public class Obj{
 
-  Triangle[] obj_triangles;
+  ArrayList<Triangle> obj_triangles;
   Material[] obj_materials;
   int[][] triangle_materials;
   
@@ -56,8 +56,10 @@ class Obj{
   
   String name;
   
-  Obj(String n, String t, Material[] m, PVector p, PVector s, PVector r){
-    this.obj_triangles = new Triangle[1];
+  public Obj(String n, String t, Material[] m, PVector p, PVector s, PVector r){
+    
+    this.obj_triangles = get_prim_tris(t);
+    
     this.obj_materials = m;
     this.scale = s;
     this.rotation = r;
@@ -65,7 +67,7 @@ class Obj{
     this.name = n;
   }
   
-  Obj(String n, Triangle[] t, Material[] m, PVector p, PVector s, PVector r){
+  Obj(String n, ArrayList<Triangle> t, Material[] m, PVector p, PVector s, PVector r){
     this.obj_triangles = t;
     this.obj_materials = m;
     this.scale = s;

@@ -16,13 +16,32 @@ PVector[] to_screen_coords(PVector[] global_coords)
   return screen_coords;
 }
 
+//Projects 3d points to flat screen
+PVector[] translate_obj(PVector[] coords, Obj object)
+{
+  PVector[] translated_coords = new PVector[coords.length];
+  float[][] transform_matrix = matrix_3x3_multiply(calculate_x_z_plane(object.rotation.x), calculate_y_z_plane(object.rotation.y));
+  transform_matrix = matrix_3x3_multiply(transform_matrix, calculate_x_y_plane(object.rotation.z));
+  
+  //multiply all vertecies by the transform matrix
+  for (int i = 0; i < coords.length; i++) {
+    
+    translated_coords[i] = rotation_matrix_multiply(coords[i], transform_matrix);
+    //Handle camera panning and zoom
+    translated_coords[i].x = (translated_coords[i].x + object.position.x)*object.scale.x;
+    translated_coords[i].y = (translated_coords[i].y + object.position.y)*object.scale.y;
+    translated_coords[i].z = (translated_coords[i].z + object.position.z)*object.scale.z;
+  }
+  return translated_coords;
+}
+
 //Reverses projection
 PVector to_global_coords_point(PVector screen_coords)
 {
   //new PVector for the result of the matrix multiplication
   PVector global_coords = new PVector();
   //transform matrix, which is the multiplication of the x_z and y_z plane rotations
-  float[][] transform_matrix = matrix_3x3_multiply(calculate_inv_x_z_plane(PrismRenderer.camera_x_angle), calculate_inv_y_z_plane(PrismRenderer.camera_y_angle));
+  float[][] transform_matrix = matrix_3x3_multiply(calculate_inv_x_z_plane(camera_x_angle), calculate_inv_y_z_plane(camera_y_angle));
   //multiply all vertecies by the transform matrix
  
   global_coords.x = (screen_coords.x + camera_x_shift + width/2)/camera_fov;
@@ -62,6 +81,13 @@ float[][] matrix_3x3_multiply(float[][] matrix1, float[][] matrix2)
 float[][] calculate_y_z_plane(float angle)
 {
   float[][] rot_matrix = {{1, 0, 0}, {0, cos(angle), sin(angle)}, {0, -sin(angle), cos(angle)}};
+  return rot_matrix;
+}
+
+//Calculates y_z plane rotation based on the camera's angle
+float[][] calculate_x_y_plane(float angle)
+{
+  float[][] rot_matrix = {{cos(angle), -sin(angle), 0}, {sin(angle), cos(angle), 0}, {0, 0, 1}};
   return rot_matrix;
 }
 

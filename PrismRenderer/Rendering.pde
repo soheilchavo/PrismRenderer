@@ -6,39 +6,43 @@ void draw_solid(){
     
     for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
     
-    for(Triangle tri : tris)
-    {
-      //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
-      PVector[] screen_coords = to_screen_coords(tri.vertecies);
+    for (int o = 0; o < objects.size(); o++){
       
-      PVector[] triangle_bounds = get_rect_bounds_of_tri(screen_coords);
-      int[] triangle_bounds_indecies = get_rect_indecies_of_tri(triangle_bounds);
-      
-      for(int i = 0; i < triangle_bounds.length; i++){
+      for(int t = 0; t < objects.get(o).obj_triangles.size(); t++)
+      {
+        Triangle tri = objects.get(o).obj_triangles.get(t);
+        //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
+        PVector[] screen_coords = translate_obj(to_screen_coords(tri.vertecies), objects.get(o));
         
-        int index = triangle_bounds_indecies[i];
-        boolean in_tri = is_point_in_tri(triangle_bounds[i], screen_coords);
-        if(in_tri){
+        PVector[] triangle_bounds = get_rect_bounds_of_tri(screen_coords);
+        int[] triangle_bounds_indecies = get_rect_indecies_of_tri(triangle_bounds);
+        
+        for(int i = 0; i < triangle_bounds.length; i++){
           
-          float depth = 0;
-          if(rast_alg == RASTERIZATION_ALGORITHM.painters) { depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z); }
-          else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(screen_coords, triangle_bounds[i]); }
-          
-          if(z_buffer[index] < depth){
-            boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
-           
-            color pixel_col = color(depth);
+          int index = triangle_bounds_indecies[i];
+          boolean in_tri = is_point_in_tri(triangle_bounds[i], screen_coords);
+          if(in_tri){
             
-            if(on_edge && render_lines)
-              pixel_col = tri.line_color;
+            float depth = 0;
+            if(rast_alg == RASTERIZATION_ALGORITHM.painters) { depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z); }
+            else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(screen_coords, triangle_bounds[i]); }
             
-            pixels[index] = pixel_col;
-            z_buffer[index] = depth;
+            if(z_buffer[index] < depth){
+              boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
+             
+              color pixel_col = color(depth);
+              
+              if(on_edge && render_lines)
+                pixel_col = tri.line_color;
+              
+              pixels[index] = pixel_col;
+              z_buffer[index] = depth;
+            }
           }
         }
-      }
       
     }
+  }
     
   for(Line line : lines)
   {
@@ -60,8 +64,9 @@ void draw_solid(){
       }
     }
   }
+  
     
-    updatePixels();
+  updatePixels();
 }
 
 void draw_wireframe()
