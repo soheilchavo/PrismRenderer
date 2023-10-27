@@ -124,6 +124,7 @@ void setup()
     new PVector(0,0,0) //Rotation
   );
   
+  
   objects.add(Sun);
   objects.add(Earth);
   objects.add(Venus);
