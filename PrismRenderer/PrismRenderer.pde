@@ -55,9 +55,13 @@ float[] z_buffer;
 //enum RENDERING_METHOD { wireframe, solid, none };
 RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 
+float curr_time;
+float delta = 0;
 
 void setup()
 {
+  curr_time = millis();
+  
   //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
   //println(is_point_on_shape_edge(new PVector(4,55), new PVector[] { new PVector(0,-100), new PVector(0,24) }));
   //set all z buffers to negative infinity
@@ -67,7 +71,7 @@ void setup()
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(900, 900);
+  size(400, 400);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
@@ -93,7 +97,7 @@ void setup()
     "Icososphere", //Prim type
     new Material(color(252,190,0),0,0,0), //Object Material
     new PVector(0,0,0), //Location
-    new PVector(65,65,65), //Scale
+    new PVector(25,25,25), //Scale
     new PVector(0,0,0) //Rotation
   );
   
@@ -115,50 +119,25 @@ void setup()
     new PVector(0,0,0) //Rotation
   );
   
-  Obj Earth = new Obj(
+  add_obj(new Obj(
     "Earth", //Name
     "Icososphere", //Prim type
     new Material(color(3,252,223),0,0,0), //Object Material
     new PVector(6,0,0), //Location
     new PVector(27,27,27), //Scale
     new PVector(0,0,0) //Rotation
-  );
+  ));
   
-  
-  objects.add(Sun);
-  objects.add(Earth);
-  objects.add(Venus);
-  objects.add(Mercury);
 }
 
 void draw()
 {
-  Obj Sun = get_object_by_name("Sun");
-  Sun.rotation.x += (1*0.03)%360;
-  Sun.rotation.y += (1*0.03)%360;
-  
-  Obj Mercury = get_object_by_name("Mercury");
-  Mercury.position.y = 7*sin(frameCount*0.07);
-  Mercury.position.x = 7*cos(frameCount*0.07);
-  Mercury.rotation.x += (1*0.03)%360;
-  Mercury.rotation.y += (1*0.03)%360;
-  
-  Obj Venus = get_object_by_name("Venus");
-  Venus.position.x = 6*sin(frameCount*0.04);
-  Venus.position.z = 6*cos(frameCount*0.04);
-  Venus.rotation.x += (1*0.03)%360;
-  Venus.rotation.y += (1*0.03)%360;
-  
-  Obj Earth = get_object_by_name("Earth");
-  Earth.position.z = 12*sin(frameCount*0.025);
-  Earth.position.x = 12*cos(frameCount*0.025);
-  Earth.rotation.x += (1*0.03)%360;
-  Earth.rotation.y += (1*0.03)%360;
   
   if(primary_rendering_method != RENDERING_METHOD.none){
     background(0,24,53);
     
     calc_camera_vector();
+    calc_planetary_movement();
     
     if (primary_rendering_method == RENDERING_METHOD.wireframe)
       draw_wireframe();
