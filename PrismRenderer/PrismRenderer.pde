@@ -15,7 +15,7 @@ ArrayList<Obj> objects = new ArrayList<Obj>();
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
-boolean render_lines = false;
+boolean render_lines = true;
 color line_color = color(0);
 /////////////////////////////////////////////////////////
 
@@ -56,12 +56,6 @@ float[] z_buffer;
 RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 
 
-//Optomization
-float prev_time = 0;
-float curr_time = 0;
-
-
-
 void setup()
 {
   //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
@@ -94,39 +88,74 @@ void setup()
   //  spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), color(parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])), color(parseInt(prim[8]), parseInt(prim[9]), parseInt(prim[10])));
   //}
   
-  Obj Suzzane = new Obj(
-    "Suzzane", //Name
-    "Sphere", //Prim type
-    new Material(color(211,76,0),0,0,0), //Object Material
+  Obj Sun = new Obj(
+    "Sun", //Name
+    "Icososphere", //Prim type
+    new Material(color(252,190,0),0,0,0), //Object Material
     new PVector(0,0,0), //Location
     new PVector(65,65,65), //Scale
     new PVector(0,0,0) //Rotation
   );
   
-  Obj Triey = new Obj(
-    "Triey", //Name
-    "Sphere", //Prim type
-    new Material(color(0,65,211),0,0,0), //Object Material
+  Obj Mercury = new Obj(
+    "Mercury", //Name
+    "Icososphere", //Prim type
+    new Material(color(252,107,0),0,0,0), //Object Material
     new PVector(6,0,0), //Location
-    new PVector(24,24,24), //Scale
+    new PVector(14,14,14), //Scale
     new PVector(0,0,0) //Rotation
   );
-  objects.add(Suzzane);
-  objects.add(Triey);
+  
+  Obj Venus = new Obj(
+    "Venus", //Name
+    "Icososphere", //Prim type
+    new Material(color(252,10,0),0,0,0), //Object Material
+    new PVector(6,0,0), //Location
+    new PVector(23,23,23), //Scale
+    new PVector(0,0,0) //Rotation
+  );
+  
+  Obj Earth = new Obj(
+    "Earth", //Name
+    "Icososphere", //Prim type
+    new Material(color(3,252,223),0,0,0), //Object Material
+    new PVector(6,0,0), //Location
+    new PVector(27,27,27), //Scale
+    new PVector(0,0,0) //Rotation
+  );
+  
+  objects.add(Sun);
+  objects.add(Earth);
+  objects.add(Venus);
+  objects.add(Mercury);
 }
 
 void draw()
 {
+  Obj Sun = get_object_by_name("Sun");
+  Sun.rotation.x += (1*0.03)%360;
+  Sun.rotation.y += (1*0.03)%360;
   
-  curr_time = millis();
+  Obj Mercury = get_object_by_name("Mercury");
+  Mercury.position.y = 7*sin(frameCount*0.07);
+  Mercury.position.x = 7*cos(frameCount*0.07);
+  Mercury.rotation.x += (1*0.03)%360;
+  Mercury.rotation.y += (1*0.03)%360;
   
-  get_object_by_name("Suzzane").rotation.x += 0.03%360;
-  get_object_by_name("Suzzane").rotation.y += 0.03%360;
-  get_object_by_name("Triey").position.y = 6*sin(frameCount*0.05);
-  get_object_by_name("Triey").position.x = 6*cos(frameCount*0.05);
+  Obj Venus = get_object_by_name("Venus");
+  Venus.position.x = 6*sin(frameCount*0.04);
+  Venus.position.z = 6*cos(frameCount*0.04);
+  Venus.rotation.x += (1*0.03)%360;
+  Venus.rotation.y += (1*0.03)%360;
+  
+  Obj Earth = get_object_by_name("Earth");
+  Earth.position.z = 12*sin(frameCount*0.025);
+  Earth.position.x = 12*cos(frameCount*0.025);
+  Earth.rotation.x += (1*0.03)%360;
+  Earth.rotation.y += (1*0.03)%360;
   
   if(primary_rendering_method != RENDERING_METHOD.none){
-    background(50,50,50);
+    background(0,24,53);
     
     calc_camera_vector();
     
@@ -137,11 +166,6 @@ void draw()
       draw_solid();
     }
   }
-  
-  //if (prev_time != 0)
-  //  noLoop();
-  //  print((curr_time-prev_time)/1000);
-  prev_time = curr_time;
 }
 
 void mouseDragged()
