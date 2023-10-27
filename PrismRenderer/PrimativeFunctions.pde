@@ -58,10 +58,11 @@ void load_primatives()
 }
 
 //Adds new primative
-ArrayList<Triangle> get_prim_tris(String type)
+ArrayList<Triangle> get_prim_tris(String type, Material objmat)
 {
   //Grab triangle info from prim array
   ArrayList<Triangle> prim_tris = (ArrayList<Triangle>) prims.get(prim_order.indexOf(type));
+  ArrayList<Triangle> cloned_tris = new ArrayList<Triangle>();
 
   for (Triangle tri : prim_tris)
   {
@@ -75,37 +76,8 @@ ArrayList<Triangle> get_prim_tris(String type)
       cloned_verts[i].z = tri.vertecies[i].z;
     }
     //Add new triangle to the list of triangles to be rendered every frame
-    Triangle cloned_tri = new Triangle(cloned_verts);
-    //cloned_tri.triangle_color = col;
-
-    PrismRenderer.tris.add(cloned_tri);
+    Triangle cloned_triangle = new Triangle(cloned_verts, objmat);
+    cloned_tris.add(cloned_triangle);
   }
-  
-  return prim_tris;
-}
-
-
-//Adds new primative
-void spawn_primative(String type, float scale, float x_translate, float y_translate, float z_translate, color col, color line_col)
-{
-  //Grab triangle info from prim array
-  ArrayList<Triangle> prim_tris = (ArrayList<Triangle>) prims.get(prim_order.indexOf(type));
-
-  for (Triangle tri : prim_tris)
-  {
-    //Clone the vertecies of the original primative so that we're not changing the base shape
-    PVector[] cloned_verts = new PVector[3];
-    for (int i = 0; i < tri.vertecies.length; i++)
-    {
-      cloned_verts[i] = new PVector();
-      cloned_verts[i].x = tri.vertecies[i].x*scale + x_translate;
-      cloned_verts[i].y = tri.vertecies[i].y*scale + y_translate;
-      cloned_verts[i].z = tri.vertecies[i].z*scale + z_translate;
-    }
-    //Add new triangle to the list of triangles to be rendered every frame
-    Triangle cloned_tri = new Triangle(cloned_verts, col, line_col);
-    //cloned_tri.triangle_color = col;
-
-    PrismRenderer.tris.add(cloned_tri);
-  }
+  return cloned_tris;
 }

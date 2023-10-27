@@ -11,20 +11,12 @@
 //RESET CAMERA POSITION: R
 
 /////////////////////////////////////////////////////////
-//ADD OBJECTS HERE: (Shapes are: Tetrahedron, Cube, Triangle, Plane, Cylinder)
-
-String[][] initial_objs = new String[][] {
-  //            Shape         Scale    x    y    z,   r      g      b     lr   lg    lb 
-  new String[] {"Monkey", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
-  //new String[] {"Tetrahedron", "34", "0", "0", "0", "255", "180", "210", "15", "10", "20"},
-  
-};
-
-public ArrayList<Obj> objects = new ArrayList<Obj>();
+ArrayList<Obj> objects = new ArrayList<Obj>();
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
-boolean render_lines = true;
+boolean render_lines = false;
+color line_color = color(0);
 /////////////////////////////////////////////////////////
 
 //List of triangles that will be rendered to the screen
@@ -57,7 +49,7 @@ PVector z = new PVector(0, 0, 200);
 float rasterization_slack = 1;
 RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
 //How much the line fill algorithm is given slack
-float line_thickness = 1;
+float line_thickness = 0.3;
 //Depth value for every pixel
 float[] z_buffer;
 //enum RENDERING_METHOD { wireframe, solid, none };
@@ -68,6 +60,8 @@ RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 float prev_time = 0;
 float curr_time = 0;
 
+
+
 void setup()
 {
   //get_tri_point_depth(new PVector[] {new PVector(0,0,0), new PVector(12,0,42), new PVector(-10,-5,0)}, new PVector(0,0));
@@ -75,12 +69,11 @@ void setup()
   //set all z buffers to negative infinity
   z_buffer = new float[width*height];
   for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
-  
   //Set default line preferences
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(600, 600);
+  size(900, 900);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
@@ -96,27 +89,41 @@ void setup()
     lines.add(z_axis);
   }
   //Spawn Prims
-  for(String[] prim: initial_objs)
-  {
-    spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), color(parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])), color(parseInt(prim[8]), parseInt(prim[9]), parseInt(prim[10])));
-  }
+  //for(String[] prim: initial_objs)
+  //{
+  //  spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), color(parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])), color(parseInt(prim[8]), parseInt(prim[9]), parseInt(prim[10])));
+  //}
   
   Obj Suzzane = new Obj(
     "Suzzane", //Name
-    "Monkey", //Prim type
-    new Material[] { new Material(color(1),0,0,0)},
-    new PVector(0,0,0),
-    new PVector(25,25,25),
-    new PVector(0,0,0)
+    "Sphere", //Prim type
+    new Material(color(211,76,0),0,0,0), //Object Material
+    new PVector(0,0,0), //Location
+    new PVector(65,65,65), //Scale
+    new PVector(0,0,0) //Rotation
   );
   
+  Obj Triey = new Obj(
+    "Triey", //Name
+    "Sphere", //Prim type
+    new Material(color(0,65,211),0,0,0), //Object Material
+    new PVector(6,0,0), //Location
+    new PVector(24,24,24), //Scale
+    new PVector(0,0,0) //Rotation
+  );
   objects.add(Suzzane);
+  objects.add(Triey);
 }
 
 void draw()
 {
   
   curr_time = millis();
+  
+  get_object_by_name("Suzzane").rotation.x += 0.03%360;
+  get_object_by_name("Suzzane").rotation.y += 0.03%360;
+  get_object_by_name("Triey").position.y = 6*sin(frameCount*0.05);
+  get_object_by_name("Triey").position.x = 6*cos(frameCount*0.05);
   
   if(primary_rendering_method != RENDERING_METHOD.none){
     background(50,50,50);

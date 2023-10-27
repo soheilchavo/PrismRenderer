@@ -6,42 +6,44 @@ void draw_solid(){
     
     for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
     
-    for (int o = 0; o < objects.size(); o++){
-      
-      for(int t = 0; t < objects.get(o).obj_triangles.size(); t++)
-      {
-        Triangle tri = objects.get(o).obj_triangles.get(t);
-        //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
-        PVector[] screen_coords = translate_obj(to_screen_coords(tri.vertecies), objects.get(o));
-        
-        PVector[] triangle_bounds = get_rect_bounds_of_tri(screen_coords);
-        int[] triangle_bounds_indecies = get_rect_indecies_of_tri(triangle_bounds);
-        
-        for(int i = 0; i < triangle_bounds.length; i++){
-          
-          int index = triangle_bounds_indecies[i];
-          boolean in_tri = is_point_in_tri(triangle_bounds[i], screen_coords);
-          if(in_tri){
-            
-            float depth = 0;
-            if(rast_alg == RASTERIZATION_ALGORITHM.painters) { depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z); }
-            else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(screen_coords, triangle_bounds[i]); }
-            
-            if(z_buffer[index] < depth){
-              boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
-             
-              color pixel_col = color(depth);
-              
-              if(on_edge && render_lines)
-                pixel_col = tri.line_color;
-              
-              pixels[index] = pixel_col;
-              z_buffer[index] = depth;
-            }
-          }
-        }
-      
+    ArrayList<Triangle> scene_triangles = new ArrayList<Triangle>();
+    
+    for(Obj obj: objects){
+      for(Triangle tri: obj.obj_triangles){
+        scene_triangles.add(new Triangle(translate_obj(tri.vertecies,obj),tri.mat));
+      }
     }
+    
+    for (Triangle tri: scene_triangles){
+      
+      //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
+      PVector[] screen_coords = to_screen_coords(tri.vertecies);
+      
+      PVector[] triangle_bounds = get_rect_bounds_of_tri(screen_coords);
+      int[] triangle_bounds_indecies = get_rect_indecies_of_tri(triangle_bounds);
+      
+      for(int i = 0; i < triangle_bounds.length; i++){
+        
+        int index = triangle_bounds_indecies[i];
+        boolean in_tri = is_point_in_tri(triangle_bounds[i], screen_coords);
+        if(in_tri){
+          
+          float depth = 0;
+          if(rast_alg == RASTERIZATION_ALGORITHM.painters) { depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z); }
+          else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(screen_coords, triangle_bounds[i]); }
+          
+          if(z_buffer[index] < depth){
+            boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
+            
+            color pixel_col = color(depth);
+            
+            if(on_edge && render_lines)
+              pixel_col = line_color;
+            
+            pixels[index] = pixel_col;
+            z_buffer[index] = depth;
+         }
+      }}
   }
     
   for(Line line : lines)
@@ -65,7 +67,6 @@ void draw_solid(){
     }
   }
   
-    
   updatePixels();
 }
 
@@ -74,13 +75,13 @@ void draw_wireframe()
   for(Triangle tri : tris)
   {
     //Set line color to specified line color (each triangle has one)
-    stroke(tri.line_color);
+    stroke(line_color);
     //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
     PVector[] screen_coords = to_screen_coords(tri.vertecies);
     //Draw circle at every vertex
     for(PVector v: screen_coords)
     {
-      fill(tri.triangle_color);
+      fill(tri.mat.m_col);
       circle(v.x, v.y, vertex_circle_size);
     }
     //Draw lines connecting the 3 vertecies of the triangle
