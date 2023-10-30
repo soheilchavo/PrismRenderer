@@ -11,12 +11,13 @@
 //RESET CAMERA POSITION: R
 
 /////////////////////////////////////////////////////////
-ArrayList<Obj> objects = new ArrayList<Obj>();
+ArrayList<Planetary_Body> objects = new ArrayList<Planetary_Body>();
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
 boolean render_lines = true;
 color line_color = color(0);
+int screenSize = 700;
 /////////////////////////////////////////////////////////
 
 //List of triangles that will be rendered to the screen
@@ -71,7 +72,7 @@ void setup()
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(400, 400);
+  size(900,900);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
@@ -92,41 +93,50 @@ void setup()
   //  spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), color(parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])), color(parseInt(prim[8]), parseInt(prim[9]), parseInt(prim[10])));
   //}
   
-  Obj Sun = new Obj(
+  add_planetary_body(
     "Sun", //Name
     "Icososphere", //Prim type
     new Material(color(252,190,0),0,0,0), //Object Material
     new PVector(0,0,0), //Location
     new PVector(25,25,25), //Scale
-    new PVector(0,0,0) //Rotation
+    new PVector(0,0,0), //Rotation
+    new PVector(1,0,1), //Axes that body rotates on itself
+    new PVector(0,1,0), //Axes that body rotates around parent
+    0.1, //Speed of self rotation
+    0, // Speed of outer rotation
+    0, //Orbit distance
+    "None" //Parent body
   );
   
-  Obj Mercury = new Obj(
+  add_planetary_body(
     "Mercury", //Name
     "Icososphere", //Prim type
     new Material(color(252,107,0),0,0,0), //Object Material
-    new PVector(6,0,0), //Location
+    new PVector(0,0,0), //Location
     new PVector(14,14,14), //Scale
-    new PVector(0,0,0) //Rotation
+    new PVector(0,0,0), //Rotation
+    new PVector(1,0,0), //Axes that body rotates on itself
+    new PVector(1,1,0), //Axes that body rotates around parent
+    0.8, //Speed of self rotation
+    0.1, // Speed of outer rotation
+    5, //Orbit distance
+    "Sun" //Parent body
   );
   
-  Obj Venus = new Obj(
-    "Venus", //Name
+  add_planetary_body(
+    "Mercury-Moon", //Name
     "Icososphere", //Prim type
-    new Material(color(252,10,0),0,0,0), //Object Material
-    new PVector(6,0,0), //Location
-    new PVector(23,23,23), //Scale
-    new PVector(0,0,0) //Rotation
+    new Material(color(145,133,167),0,0,0), //Object Material
+    new PVector(0,0,0), //Location
+    new PVector(4,4,4), //Scale
+    new PVector(0,0,0), //Rotation
+    new PVector(1,1,0), //Axes that body rotates on itself
+    new PVector(1,1,1), //Axes that body rotates around parent
+    0.05, //Speed of self rotation
+    0.1, // Speed of outer rotation
+    15, //Orbit distance
+    "Mercury" //Parent body
   );
-  
-  add_obj(new Obj(
-    "Earth", //Name
-    "Icososphere", //Prim type
-    new Material(color(3,252,223),0,0,0), //Object Material
-    new PVector(6,0,0), //Location
-    new PVector(27,27,27), //Scale
-    new PVector(0,0,0) //Rotation
-  ));
   
 }
 
@@ -199,7 +209,7 @@ void set_inital_camera()
 {
   camera_x_angle = 5.5;
   camera_y_angle = 3.59;
-  camera_fov = 1;
+  camera_fov = 3;
   camera_x_shift = 0;
   camera_y_shift = 24;
 }
