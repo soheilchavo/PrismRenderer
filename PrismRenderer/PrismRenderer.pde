@@ -11,12 +11,15 @@
 //RESET CAMERA POSITION: R
 
 /////////////////////////////////////////////////////////
-ArrayList<Planetary_Body> objects = new ArrayList<Planetary_Body>();
+ArrayList<Obj> objects = new ArrayList<Obj>();
 
 //Try turning on x,y,z axes!
 boolean axes_on = true;
 boolean render_lines = true;
-color line_color = color(0);
+
+color line_color_solid = color(0);
+color line_color_wireframe = color(255);
+
 int screenSize = 700;
 /////////////////////////////////////////////////////////
 
@@ -48,11 +51,13 @@ PVector z = new PVector(0, 0, 200);
 
 //How much the rasterization algorithm is given slack
 float rasterization_slack = 1;
+float line_thickness = 0.7;
+
 RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
-//How much the line fill algorithm is given slack
-float line_thickness = 0.3;
+
 //Depth value for every pixel
 float[] z_buffer;
+
 //enum RENDERING_METHOD { wireframe, solid, none };
 RENDERING_METHOD primary_rendering_method = RENDERING_METHOD.solid;
 
@@ -93,49 +98,13 @@ void setup()
   //  spawn_primative(prim[0], parseFloat(prim[1]), parseFloat(prim[2]), parseFloat(prim[3]), parseFloat(prim[4]), color(parseInt(prim[5]), parseInt(prim[6]), parseInt(prim[7])), color(parseInt(prim[8]), parseInt(prim[9]), parseInt(prim[10])));
   //}
   
-  add_planetary_body(
-    "Sun", //Name
-    "Icososphere", //Prim type
+  add_obj(
+    "Suzzane", //Name
+    "Monkey", //Prim type
     new Material(color(252,190,0),0,0,0), //Object Material
     new PVector(0,0,0), //Location
-    new PVector(25,25,25), //Scale
-    new PVector(0,0,0), //Rotation
-    new PVector(1,0,1), //Axes that body rotates on itself
-    new PVector(0,1,0), //Axes that body rotates around parent
-    0.1, //Speed of self rotation
-    0, // Speed of outer rotation
-    0, //Orbit distance
-    "None" //Parent body
-  );
-  
-  add_planetary_body(
-    "Mercury", //Name
-    "Icososphere", //Prim type
-    new Material(color(252,107,0),0,0,0), //Object Material
-    new PVector(0,0,0), //Location
-    new PVector(14,14,14), //Scale
-    new PVector(0,0,0), //Rotation
-    new PVector(1,0,0), //Axes that body rotates on itself
-    new PVector(1,1,0), //Axes that body rotates around parent
-    0.8, //Speed of self rotation
-    0.1, // Speed of outer rotation
-    5, //Orbit distance
-    "Sun" //Parent body
-  );
-  
-  add_planetary_body(
-    "Mercury-Moon", //Name
-    "Icososphere", //Prim type
-    new Material(color(145,133,167),0,0,0), //Object Material
-    new PVector(0,0,0), //Location
-    new PVector(4,4,4), //Scale
-    new PVector(0,0,0), //Rotation
-    new PVector(1,1,0), //Axes that body rotates on itself
-    new PVector(1,1,1), //Axes that body rotates around parent
-    0.05, //Speed of self rotation
-    0.1, // Speed of outer rotation
-    15, //Orbit distance
-    "Mercury" //Parent body
+    new PVector(45,45,45), //Scale
+    new PVector(90,0,0) //Rotation
   );
   
 }
@@ -147,7 +116,6 @@ void draw()
     background(0,24,53);
     
     calc_camera_vector();
-    calc_planetary_movement();
     
     if (primary_rendering_method == RENDERING_METHOD.wireframe)
       draw_wireframe();

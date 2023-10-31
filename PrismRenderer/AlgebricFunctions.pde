@@ -20,8 +20,8 @@ PVector[] to_screen_coords(PVector[] global_coords)
 PVector[] translate_obj(PVector[] coords, Obj object)
 {
   PVector[] translated_coords = new PVector[coords.length];
-  float[][] transform_matrix = matrix_3x3_multiply(calculate_x_z_plane(object.rotation.x), calculate_y_z_plane(object.rotation.y));
-  transform_matrix = matrix_3x3_multiply(transform_matrix, calculate_x_y_plane(object.rotation.z));
+  float[][] transform_matrix = matrix_3x3_multiply(calculate_x_z_plane(radians(object.rotation.x)), calculate_y_z_plane(radians(object.rotation.y)));
+  transform_matrix = matrix_3x3_multiply(transform_matrix, calculate_x_y_plane(radians(object.rotation.z)));
   
   //multiply all vertecies by the transform matrix
   for (int i = 0; i < coords.length; i++) {

@@ -77,7 +77,6 @@ float sign (PVector p1, PVector p2, PVector p3)
     return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
 }
 
-
 boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
   
   PVector[][] combanations = new PVector[shape.length][3];
@@ -91,41 +90,14 @@ boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
 
   for (PVector[] comb : combanations) {
     
-    //If there is a vertical line
-    float[] equation = get_line_equation(comb[0], comb[1]);
+    PVector a = comb[0];
+    PVector b = comb[1];
     
-    //  if(abs(-equation[0]/equation[1]) < 0.5){
-    //    return true;
-        //if(abs(point.x-((-equation[0]/equation[1])*point.y)-equation[2])<2){
-        //  return true;
-        //}
-      //}
-      
-      //else{
-      float num = abs(equation[0]*point.x + equation[1]*point.y + equation[2]);
-      float dem = sqrt(pow(equation[0],2)+pow(equation[1],2));
-      
-      if (num/dem <= line_thickness)
-        return true;
-      //}
+    float distance = 
+      ( (b.x-a.x)*(point.y-a.y)-(b.y-a.y)*(point.x-a.x) )/
+      ( sqrt( pow((b.x-a.x),2)+pow((b.y-a.y),2) ) );
     
-    //comb[0] = first vertex of line, comb[1] = second vertex of line
-    //point = the point
-    
-    //PVector closest_point = new PVector();
-    
-    //PVector ab = comb[1].sub(comb[0]);
-    //PVector ap = point.sub(comb[0]);
-    
-    //float dot_proj = ap.dot(ab);
-    //float len_ab_squared = pow(ab.mag(),2);
-    //float normal_proj = dot_proj/len_ab_squared;
-    
-    //if(normal_proj <= 0) { closest_point = comb[0]; }
-    //if(normal_proj >= 1) { closest_point = comb[1]; }
-    //else { closest_point = comb[0].add(ab.mult(normal_proj)); }
-    
-    //if(dist(closest_point.x,closest_point.y,point.x,point.y) <= line_thickness) { return true; }
+    if(abs(distance) <= line_thickness) { return true; }
   }
 
   return false;
