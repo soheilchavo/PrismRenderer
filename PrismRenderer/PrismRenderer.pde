@@ -33,6 +33,7 @@ float vertex_circle_size = 7;
 //Angles for calculating rotation
 static float camera_x_angle = 0;
 static float camera_y_angle = 0;
+static float camera_z_angle = 0.4;
 static PVector camera_vector = new PVector();
 //The field of view of camera (zoom)
 static float camera_fov = 2;
@@ -40,7 +41,7 @@ static float camera_fov = 2;
 static float camera_x_shift = 0;
 static float camera_y_shift = 0;
 //How much the camera will pan when user presses buttons
-float shift_sensitivity = 12;
+float shift_sensitivity = 10;
 //How sensitive the screen is to rotation
 float mouse_sensitivity = 1;
 //Vertecies for drawing xyz axes
@@ -51,7 +52,7 @@ PVector z = new PVector(0, 0, 200);
 
 //How much the rasterization algorithm is given slack
 float rasterization_slack = 1;
-float line_thickness = 0.7;
+float line_thickness = 1;
 
 RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
 
@@ -77,7 +78,7 @@ void setup()
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(900,900);
+  size(1200,1200);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
@@ -100,11 +101,20 @@ void setup()
   
   add_obj(
     "Suzzane", //Name
-    "Monkey", //Prim type
-    new Material(color(252,190,0),0,0,0), //Object Material
+    "Satellite", //Prim type
+    new Material(252,155,0,0,0,0), //Object Material
     new PVector(0,0,0), //Location
-    new PVector(45,45,45), //Scale
+    new PVector(8,8,8), //Scale
     new PVector(90,0,0) //Rotation
+  );
+  
+  add_obj(
+    "Boo", //Name
+    "Monkey", //Prim type
+    new Material(65,155,233,0,0,0), //Object Material
+    new PVector(4,0,0), //Location
+    new PVector(45,45,45), //Scale
+    new PVector(0,0,0) //Rotation
   );
   
 }

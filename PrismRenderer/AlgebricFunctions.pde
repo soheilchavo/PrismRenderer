@@ -5,6 +5,7 @@ PVector[] to_screen_coords(PVector[] global_coords)
   PVector[] screen_coords = new PVector[global_coords.length];
   //transform matrix, which is the multiplication of the x_z and y_z plane rotations
   float[][] transform_matrix = matrix_3x3_multiply(calculate_x_z_plane(PrismRenderer.camera_x_angle), calculate_y_z_plane(PrismRenderer.camera_y_angle));
+  transform_matrix = matrix_3x3_multiply(transform_matrix, calculate_x_y_plane(radians(camera_z_angle)));
   //multiply all vertecies by the transform matrix
   for (int i = 0; i < global_coords.length; i++) {
     //Multiply vertex position by the rotations of camera

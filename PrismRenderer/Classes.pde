@@ -5,7 +5,7 @@ class Triangle {
   Triangle(PVector[] verts)
   {
     this.vertecies = verts;
-    this.mat = new Material(color(1), 0, 0, 0);
+    this.mat = new Material(255,255,255, 0, 0, 0);
   }
   
   Triangle(PVector[] verts, Material mat_v)
@@ -14,11 +14,6 @@ class Triangle {
     this.mat = mat_v;
   }
   
-  Triangle(PVector[] verts, color material_color)
-  {
-    this.vertecies = verts;
-    this.mat = new Material(material_color,0,0,0);
-  }
 }
 
 class Line {
@@ -63,16 +58,19 @@ public class Obj{
 
 class Material{
 
-  int m_col;
+  int[] m_col = new int[3];
   float m_metalic;
   float m_rough;
   float m_e_strength;
   
-  Material(int c, float m, float r, float es){
+  Material(int r, int g, int b, float m, float ro, float es){
   
-    this.m_col = c;
+    this.m_col[0] = r;
+    this.m_col[1] = g;
+    this.m_col[2] = b;
+    
     this.m_metalic = m;
-    this.m_rough = r;
+    this.m_rough = ro;
     this.m_e_strength = es;
     
   }

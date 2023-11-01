@@ -34,7 +34,7 @@ void load_primatives()
               model_vertecies.get(int(lineArray[1].substring(0,lineArray[1].indexOf("/")))-1),
               model_vertecies.get(int(lineArray[2].substring(0,lineArray[2].indexOf("/")))-1),
               model_vertecies.get(int(lineArray[3].substring(0,lineArray[3].indexOf("/")))-1)
-            }, color(1)
+            }
             ));
           }
           
@@ -43,7 +43,7 @@ void load_primatives()
               model_vertecies.get(int(lineArray[1])-1),
               model_vertecies.get(int(lineArray[2])-1),
               model_vertecies.get(int(lineArray[3])-1)
-            }, color(1)
+            }
             ));
           }
         }
