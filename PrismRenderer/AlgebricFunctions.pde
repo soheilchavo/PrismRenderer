@@ -54,6 +54,23 @@ PVector to_global_coords_point(PVector screen_coords)
   return global_coords;
 }
 
+PVector to_screen_coords_point(PVector local_coords)
+{
+  //new PVector for the result of the matrix multiplication
+  PVector screen_coords = new PVector();
+  //transform matrix, which is the multiplication of the x_z and y_z plane rotations
+  float[][] transform_matrix = matrix_3x3_multiply(calculate_x_z_plane(camera_x_angle), calculate_y_z_plane(camera_y_angle));
+  //multiply all vertecies by the transform matrix
+ 
+  screen_coords.x = (local_coords.x + camera_x_shift + width/2)/camera_fov;
+  screen_coords.y = (local_coords.y + camera_y_shift + height/2)/camera_fov;
+  screen_coords.z = local_coords.z;
+  
+  screen_coords = rotation_matrix_multiply(local_coords, transform_matrix);
+  
+  return screen_coords;
+}
+
 //Multiplies a 3x1 vector by a 3x3 matrix
 PVector rotation_matrix_multiply(PVector vector, float[][] matrix)
 {

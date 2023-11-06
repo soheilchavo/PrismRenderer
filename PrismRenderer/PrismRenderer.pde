@@ -54,7 +54,7 @@ PVector z = new PVector(0, 0, 200);
 float rasterization_slack = 1;
 float line_thickness = 1;
 
-RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.painters;
+RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.pixel;
 
 //Depth value for every pixel
 float[] z_buffer;
@@ -78,7 +78,7 @@ void setup()
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(1200,1200);
+  size(400,400);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
@@ -104,7 +104,7 @@ void setup()
     "Satellite", //Prim type
     new Material(252,155,0,0,0,0), //Object Material
     new PVector(0,0,0), //Location
-    new PVector(8,8,8), //Scale
+    new PVector(5,5,5), //Scale
     new PVector(90,0,0) //Rotation
   );
   
@@ -112,7 +112,7 @@ void setup()
     "Boo", //Name
     "Monkey", //Prim type
     new Material(65,155,233,0,0,0), //Object Material
-    new PVector(4,0,0), //Location
+    new PVector(2,0,0), //Location
     new PVector(45,45,45), //Scale
     new PVector(0,0,0) //Rotation
   );

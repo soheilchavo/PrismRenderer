@@ -137,6 +137,8 @@ float get_tri_point_depth(PVector[] tri, PVector point_screen) {
   //plug point in to get the z coord
   point.z = calculate_z_from_plane(k,u,point);
   //println(u,k);
+  
+  point = to_screen_coords_point(point);
 
   //return distance of point from camera
   //return dist_3d(point, camera_vector);
