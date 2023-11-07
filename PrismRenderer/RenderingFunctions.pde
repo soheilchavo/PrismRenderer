@@ -107,7 +107,7 @@ boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
 PVector get_triangle_normal(PVector[] tri) {
   //Find the two vectors that are coplanar to the triangle (plane)
   PVector AB = new PVector(tri[1].x - tri[0].x, tri[1].y - tri[0].y, tri[1].z - tri[0].z );
-  PVector AC = new PVector(tri[2].x - tri[0].x, tri[2].y - tri[0].y, tri[2].z - tri[0].z );
+  PVector AC = new PVector(tri[2].x - tri[1].x, tri[2].y - tri[1].y, tri[2].z - tri[1].z );
   //Get normal vector by taking their cross product
   PVector n = normalize_vector(vector_cross_product(AB, AC));
   return n;
@@ -118,29 +118,26 @@ float calculate_k_constant(PVector vertex, PVector normal){
 }
 
 float calculate_z_from_plane(float k, PVector n, PVector point){
-  return -(k + n.x*point.x + n.y*point.y)/n.z;
+  return (-k + n.x*point.x + n.y*point.y)/n.z;
 }
 
 float get_tri_point_depth(PVector[] tri, PVector point_screen) {
   //Find the equation of the plane
   //Get normal vector of triangle
   
-  PVector point = new PVector();
+  PVector global_point = to_global_coords_point(point_screen);
+  PVector[] global_tri = to_global_coords_tri(tri);
   
-  PVector u = get_triangle_normal(tri);
+  PVector u = get_triangle_normal(global_tri);
   
-  point = to_global_coords_point(point_screen);
-
+  //point = point_screen;
   //Calculate constant in plane equation
-  float k = calculate_k_constant(tri[0], u);
+  float k = calculate_k_constant(global_tri[0], u);
 
   //plug point in to get the z coord
-  point.z = calculate_z_from_plane(k,u,point);
-  //println(u,k);
-  
-  point = to_screen_coords_point(point);
+  global_point.z = calculate_z_from_plane(k,u,global_point);
 
   //return distance of point from camera
   //return dist_3d(point, camera_vector);
-  return point.z;
+  return global_point.z;
 }

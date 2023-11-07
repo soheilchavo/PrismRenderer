@@ -42,14 +42,21 @@ PVector to_global_coords_point(PVector screen_coords)
   //new PVector for the result of the matrix multiplication
   PVector global_coords = new PVector();
   //transform matrix, which is the multiplication of the x_z and y_z plane rotations
-  float[][] transform_matrix = matrix_3x3_multiply(calculate_inv_x_z_plane(camera_x_angle), calculate_inv_y_z_plane(camera_y_angle));
-  //multiply all vertecies by the transform matrix
- 
   global_coords.x = (screen_coords.x + camera_x_shift + width/2)/camera_fov;
   global_coords.y = (screen_coords.y + camera_y_shift + height/2)/camera_fov;
   global_coords.z = screen_coords.z;
   
-  global_coords = rotation_matrix_multiply(global_coords, transform_matrix);
+  return global_coords;
+}
+
+PVector[] to_global_coords_tri(PVector[] screen_coords)
+{
+  //new PVector for the result of the matrix multiplication
+  PVector[] global_coords = new PVector[screen_coords.length];
+  
+  for(int i = 0; i < screen_coords.length; i++){
+    global_coords[i] = to_global_coords_point(screen_coords[i]);
+  }
   
   return global_coords;
 }
