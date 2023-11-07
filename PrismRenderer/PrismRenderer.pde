@@ -110,10 +110,10 @@ void setup()
   
   add_obj(
     "tri", //Name
-    "Triangle", //Prim type
+    "Tetrahedron", //Prim type
     new Material(255,00,200,0,0,0), //Object Material
     new PVector(0,0.5,0), //Location
-    new PVector(75,75,75), //Scale
+    new PVector(35,35,35), //Scale
     new PVector(90,0,0) //Rotation
   );
   

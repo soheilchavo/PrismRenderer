@@ -150,6 +150,7 @@ color point_lighting(Triangle tri, float depth){
   
   float l = depth;
   
-  return color(l*tri.mat.m_col[0], l*tri.mat.m_col[1], l*tri.mat.m_col[2]);
+  //return color(l*tri.mat.m_col[0], l*tri.mat.m_col[1], l*tri.mat.m_col[2]);
+  return color(l*3+100);
 
 }
