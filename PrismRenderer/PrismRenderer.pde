@@ -109,11 +109,11 @@ void setup()
   );
   
   add_obj(
-    "Suzzane", //Name
+    "tri", //Name
     "Triangle", //Prim type
     new Material(255,00,200,0,0,0), //Object Material
-    new PVector(0,0,0), //Location
-    new PVector(45,45,45), //Scale
+    new PVector(0,0.5,0), //Location
+    new PVector(75,75,75), //Scale
     new PVector(90,0,0) //Rotation
   );
   
@@ -125,7 +125,7 @@ void draw()
   
   if(primary_rendering_method != RENDERING_METHOD.none){
     background(0,24,53);
-    
+    get_object_by_name("tri").rotation.z += 5;
     calc_camera_vector();
     
     if (primary_rendering_method == RENDERING_METHOD.wireframe)
