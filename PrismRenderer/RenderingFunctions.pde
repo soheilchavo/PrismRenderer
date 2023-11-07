@@ -141,3 +141,15 @@ float get_tri_point_depth(PVector[] tri, PVector point_screen) {
   //return dist_3d(point, camera_vector);
   return global_point.z;
 }
+
+color point_lighting(Triangle tri, float depth){
+  
+  PVector[] global_tri = to_global_coords_tri(tri.vertecies);
+  
+  PVector u = get_triangle_normal(global_tri);
+  
+  float l = depth;
+  
+  return color(l*tri.mat.m_col[0], l*tri.mat.m_col[1], l*tri.mat.m_col[2]);
+
+}

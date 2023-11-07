@@ -101,10 +101,10 @@ void setup()
   
   add_obj(
     "Suzzane", //Name
-    "Monkey", //Prim type
+    "Satellite", //Prim type
     new Material(200,200,200,0,0,0), //Object Material
     new PVector(0,0,0), //Location
-    new PVector(45,45,45), //Scale
+    new PVector(5,5,5), //Scale
     new PVector(90,0,0) //Rotation
   );
   
