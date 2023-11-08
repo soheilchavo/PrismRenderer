@@ -17,6 +17,9 @@ ArrayList<Obj> objects = new ArrayList<Obj>();
 boolean axes_on = true;
 boolean render_lines = true;
 
+float rasterization_slack = 2;
+float line_thickness = 0.5;
+
 color line_color_solid = color(0);
 color line_color_wireframe = color(255);
 
@@ -50,9 +53,6 @@ PVector x = new PVector(200, 0, 0);
 PVector y = new PVector(0, 200, 0);
 PVector z = new PVector(0, 0, 200);
 
-//How much the rasterization algorithm is given slack
-float rasterization_slack = 1;
-float line_thickness = 1;
 
 RASTERIZATION_ALGORITHM rast_alg = RASTERIZATION_ALGORITHM.pixel;
 
@@ -78,7 +78,7 @@ void setup()
   strokeWeight(stroke_size);
   stroke(255);
   //set size of screen
-  size(400,400);
+  size(900,900);
  //Calculate the vertecies in the PrimativeData.txt file in order to draw them later
   load_primatives();
   //Set Camera Position
@@ -101,18 +101,18 @@ void setup()
   
   add_obj(
     "Suzzane", //Name
-    "Monkey", //Prim type
+    "Satellite", //Prim type
     new Material(200,200,200,0,0,0), //Object Material
     new PVector(0,0,0), //Location
-    new PVector(45,45,45), //Scale
+    new PVector(5,5,5), //Scale
     new PVector(90,0,0) //Rotation
   );
   
   add_obj(
     "tri", //Name
     "Tetrahedron", //Prim type
-    new Material(255,00,200,0,0,0), //Object Material
-    new PVector(0,0.5,0), //Location
+    new Material(223,0,0,0,0,0), //Object Material
+    new PVector(0,0,2), //Location
     new PVector(35,35,35), //Scale
     new PVector(90,0,0) //Rotation
   );
@@ -134,6 +134,8 @@ void draw()
     if (primary_rendering_method == RENDERING_METHOD.solid){
       draw_solid();
     }
+    if(render_lines)
+      draw_lines();
   }
 }
 

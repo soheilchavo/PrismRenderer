@@ -43,20 +43,6 @@ int [] get_rect_indecies_of_tri(PVector[] values) {
 }
 
 boolean is_point_in_tri(PVector point, PVector[] tri) {
-
-  ////OLD RAST ALG
-  //float area_of_tri = area_triangle(tri[0], tri[1], tri[2]);
-
-  //float area_tri_point_1 = area_triangle(point, tri[1], tri[2]);
-  //float area_tri_point_2 = area_triangle(tri[0], point, tri[2]);
-  //float area_tri_point_3 = area_triangle(tri[0], tri[1], point);
-
-  //if (((area_tri_point_1+area_tri_point_2+area_tri_point_3) - area_of_tri) <= rasterization_slack)
-  //  return true;
-  //else
-  //  return false;
-  
-  //New RAST ALG (WAY FASTER)
   
   float d1, d2, d3;
   boolean has_neg, has_pos;
@@ -65,8 +51,8 @@ boolean is_point_in_tri(PVector point, PVector[] tri) {
   d2 = sign(point, tri[1], tri[2]);
   d3 = sign(point, tri[2], tri[0]);
 
-  has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
-  has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+  has_neg = (d1 < -rasterization_slack) || (d2 < -rasterization_slack) || (d3 < -rasterization_slack);
+  has_pos = (d1 > rasterization_slack) || (d2 > rasterization_slack) || (d3 > rasterization_slack);
 
   return !(has_neg && has_pos);
   
@@ -122,35 +108,23 @@ float calculate_z_from_plane(float k, PVector n, PVector point){
 }
 
 float get_tri_point_depth(PVector[] tri, PVector point_screen) {
-  //Find the equation of the plane
-  //Get normal vector of triangle
   
   PVector global_point = to_global_coords_point(point_screen);
   PVector[] global_tri = to_global_coords_tri(tri);
   
   PVector u = get_triangle_normal(global_tri);
   
-  //point = point_screen;
-  //Calculate constant in plane equation
   float k = calculate_k_constant(global_tri[0], u);
 
-  //plug point in to get the z coord
   global_point.z = calculate_z_from_plane(k,u,global_point);
 
-  //return distance of point from camera
-  //return dist_3d(point, camera_vector);
   return global_point.z;
 }
 
 color point_lighting(Triangle tri, float depth){
   
-  PVector[] global_tri = to_global_coords_tri(tri.vertecies);
-  
-  PVector u = get_triangle_normal(global_tri);
-  
-  float l = depth;
-  
-  //return color(l*tri.mat.m_col[0], l*tri.mat.m_col[1], l*tri.mat.m_col[2]);
-  return color(l*3+100);
+  float d = depth*3;
+  float o = 0;
+  return color(d+tri.mat.m_col[0]+o,d+tri.mat.m_col[1]+o,d+tri.mat.m_col[2]+o);
 
 }

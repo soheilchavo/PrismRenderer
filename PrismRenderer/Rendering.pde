@@ -1,9 +1,9 @@
 void draw_solid(){
 
     //Go through each triangle, assign each pixel to a point and pair it with a depth, override a pixel if its depth is less
-    
+      
     loadPixels();
-    
+              
     for(int i = 0; i < z_buffer.length; i++){ z_buffer[i] = Float.NEGATIVE_INFINITY; }
     
     ArrayList<Triangle> scene_triangles = new ArrayList<Triangle>();
@@ -32,7 +32,7 @@ void draw_solid(){
           if(rast_alg == RASTERIZATION_ALGORITHM.painters) { depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z); }
           else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(screen_coords, triangle_bounds[i]); }
           
-          if(z_buffer[index] < depth){
+          if(z_buffer[index] <= depth){
             boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
             
             color pixel_col = point_lighting(tri, depth);
@@ -46,27 +46,7 @@ void draw_solid(){
       }
       }
   }
-    
-  for(Line line : lines)
-  {
-    //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
-    PVector[] screen_coords = to_screen_coords(new PVector[] {line.a, line.b});
-    
-    PVector[] line_bounds = get_rect_bounds_of_tri(screen_coords);
-    int[] line_bounds_indecies = get_rect_indecies_of_tri(line_bounds);
-    
-    for(int i = 0; i < line_bounds.length; i++){
-      
-      int index = line_bounds_indecies[i];
-      boolean in_line = is_point_on_shape_edge(line_bounds[i], screen_coords);
-      
-      if(in_line){
-        if(z_buffer[index] == Float.NEGATIVE_INFINITY){
-          pixels[index] = line.col;
-        }
-      }
-    }
-  }
+   
   
   updatePixels();
 }
@@ -103,16 +83,17 @@ void draw_wireframe()
           
           float depth = 0;
           if(rast_alg == RASTERIZATION_ALGORITHM.painters) { depth = -(screen_coords[0].z + screen_coords[1].z + screen_coords[2].z); }
-          else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(screen_coords, triangle_bounds[i]); }
+          else if(rast_alg == RASTERIZATION_ALGORITHM.pixel) { depth = get_tri_point_depth(tri.vertecies, triangle_bounds[i]); }
           
           if(z_buffer[index] < depth){
             boolean on_edge = is_point_on_shape_edge(triangle_bounds[i], screen_coords);
             
-            if(on_edge && render_lines)
+            if(on_edge && render_lines) {
               pixels[index] = line_color_wireframe;
-              z_buffer[index] = depth;
-         }
-      }
+              z_buffer[index] = depth; 
+            }
+          }
+        }
       }
   }
     
@@ -137,5 +118,32 @@ void draw_wireframe()
     }
   }
   
+  updatePixels();
+}
+
+
+void draw_lines(){
+
+ loadPixels();
+  for(Line line : lines)
+  {
+    //Translate the flat co-ords of the triangle to the 3d projection (multiply it by rotation and scale matricies)
+    PVector[] screen_coords = to_screen_coords(new PVector[] {line.a, line.b});
+    
+    PVector[] line_bounds = get_rect_bounds_of_tri(screen_coords);
+    int[] line_bounds_indecies = get_rect_indecies_of_tri(line_bounds);
+    
+    for(int i = 0; i < line_bounds.length; i++){
+      
+      int index = line_bounds_indecies[i];
+      boolean in_line = is_point_on_shape_edge(line_bounds[i], screen_coords);
+      
+      if(in_line){
+        if(z_buffer[index] == Float.NEGATIVE_INFINITY){
+          pixels[index] = line.col;
+        }
+      }
+    }
+  }
   updatePixels();
 }

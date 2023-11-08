@@ -175,12 +175,9 @@ float dist_3d(PVector a, PVector b) {
 }
 
 void calc_camera_vector() {
-  //add camera shift capabilities
-  float r = camera_fov*2;
-  camera_vector.x = r*sin(camera_y_angle)*cos(camera_x_angle);
-  camera_vector.y = r*sin(camera_y_angle)*sin(camera_x_angle);
-  camera_vector.z = r*cos(camera_y_angle);
-  //println(camera_vector);
+  camera_vector.x = camera_fov*sin(camera_y_angle)*cos(camera_x_angle);
+  camera_vector.y = camera_fov*sin(camera_y_angle)*sin(camera_x_angle);
+  camera_vector.z = camera_fov*cos(camera_y_angle);
 }
 PVector vector_cross_product(PVector a, PVector b) {
   return new PVector(
@@ -197,7 +194,6 @@ float vector_dot_product(PVector a, PVector b) {
 float angle_between_vectors(PVector a, PVector b){
   return asin(vector_cross_product(a,b).mag()/(a.mag()*b.mag()));
 }
-
 
 PVector normalize_vector(PVector v) {
 
