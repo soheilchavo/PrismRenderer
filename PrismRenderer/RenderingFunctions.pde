@@ -1,3 +1,4 @@
+//returns the pixel values of the triangles/line
 PVector [] get_rect_bounds_of_tri(PVector[] verts) {
 
   int minX = width;
@@ -5,12 +6,15 @@ PVector [] get_rect_bounds_of_tri(PVector[] verts) {
   int minY = width;
   int maxY = 0;
 
+  //Lap through all vertecies and find min and maxes
   for (PVector vert : verts) {
     minX = min(int(vert.x), minX);
     minY = min(int(vert.y), minY);
     maxX = max(int(vert.x), maxX);
     maxY = max(int(vert.y), maxY);
   }
+  
+  //Find the pixel values of every boundary
   PVector[] pixel_values = new PVector[(minX-maxX)*(minY-maxY)];
 
   int current_y = minY;
@@ -25,12 +29,15 @@ PVector [] get_rect_bounds_of_tri(PVector[] verts) {
     current_x++;
 
     pixel_values[i] = new PVector(0, 0);
+    
     if (current_x < width && current_y < height && current_x > 0 && current_y > 0)
       pixel_values[i] = new PVector(current_x, current_y);
   }
+  
   return pixel_values;
 }
 
+//gets pixel indecies of the rectangle boundary of a tri/line
 int [] get_rect_indecies_of_tri(PVector[] values) {
 
   int[] pixel_indecies = new int[values.length];
@@ -42,6 +49,7 @@ int [] get_rect_indecies_of_tri(PVector[] values) {
   return pixel_indecies;
 }
 
+//Checks if a point is in the triangle
 boolean is_point_in_tri(PVector point, PVector[] tri) {
   
   float d1, d2, d3;
@@ -59,10 +67,9 @@ boolean is_point_in_tri(PVector point, PVector[] tri) {
 }
 
 float sign (PVector p1, PVector p2, PVector p3)
-{
-    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
-}
+{ return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);}
 
+//Is the point on the edge of the tri/line
 boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
   
   PVector[][] combanations = new PVector[shape.length][3];
@@ -91,12 +98,12 @@ boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
 
 
 PVector get_triangle_normal(PVector[] tri) {
-  //Find the two vectors that are coplanar to the triangle (plane)
+  
+  //Find the two vectors that are coplanar to the triangle
   PVector AB = new PVector(tri[1].x - tri[0].x, tri[1].y - tri[0].y, tri[1].z - tri[0].z );
   PVector AC = new PVector(tri[2].x - tri[1].x, tri[2].y - tri[1].y, tri[2].z - tri[1].z );
-  //Get normal vector by taking their cross product
-  PVector n = normalize_vector(vector_cross_product(AB, AC));
-  return n;
+  
+  return normalize_vector(vector_cross_product(AB, AC));
 }
 
 float calculate_k_constant(PVector vertex, PVector normal){

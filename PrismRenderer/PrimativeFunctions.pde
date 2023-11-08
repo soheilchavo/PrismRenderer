@@ -1,7 +1,7 @@
-//List of prebuilt vertecies for Primatives (Cube, Plane, etc)
 ArrayList vertecies = new ArrayList<PVector>();
-//List of prebuilt primatives
+
 ArrayList prims = new ArrayList<ArrayList<Triangle>>();
+
 //The order that the prims arraylist is in (in terms of name, ex: Cube: 1, Triangle: 2, etc)
 ArrayList prim_order = new ArrayList<String>();
 
@@ -12,6 +12,7 @@ void load_primatives()
   File[] files = directory.listFiles();
   
   for (File modelData : files) {
+    
     ArrayList<PVector> model_vertecies = new ArrayList<PVector>();
     ArrayList<Triangle> model_triangles = new ArrayList<Triangle>();
     String modelName = modelData.getName();
