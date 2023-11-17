@@ -1,12 +1,11 @@
-//returns the pixel values of the triangles/line
-PVector [] get_rect_bounds_of_tri(PVector[] verts) {
-
+PVector [] get_rect_bounds_of_tri(PVector[] verts) //returns the pixel values of the triangles/line
+{
   int minX = width;
   int maxX = 0;
   int minY = width;
   int maxY = 0;
 
-  //Lap through all vertecies and find min and maxes
+  //Itterates through all vertecies and find min and maxes
   for (PVector vert : verts) {
     minX = min(int(vert.x), minX);
     minY = min(int(vert.y), minY);
@@ -37,8 +36,7 @@ PVector [] get_rect_bounds_of_tri(PVector[] verts) {
   return pixel_values;
 }
 
-//gets pixel indecies of the rectangle boundary of a tri/line
-int [] get_rect_indecies_of_tri(PVector[] values) {
+int [] get_rect_indecies_of_tri(PVector[] values) { //gets pixel indecies of the rectangle boundary of a tri/line
 
   int[] pixel_indecies = new int[values.length];
 
@@ -49,7 +47,6 @@ int [] get_rect_indecies_of_tri(PVector[] values) {
   return pixel_indecies;
 }
 
-//Checks if a point is in the triangle
 boolean is_point_in_tri(PVector point, PVector[] tri) {
   
   float d1, d2, d3;
@@ -63,13 +60,11 @@ boolean is_point_in_tri(PVector point, PVector[] tri) {
   has_pos = (d1 > rasterization_slack) || (d2 > rasterization_slack) || (d3 > rasterization_slack);
 
   return !(has_neg && has_pos);
-  
 }
 
 float sign (PVector p1, PVector p2, PVector p3)
 { return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);}
 
-//Is the point on the edge of the tri/line
 boolean is_point_on_shape_edge(PVector point, PVector[] shape) {
   
   PVector[][] combanations = new PVector[shape.length][3];
@@ -129,9 +124,6 @@ float get_tri_point_depth(PVector[] tri, PVector point_screen) {
 }
 
 color point_lighting(Triangle tri, float depth){
-  
   float d = depth*3;
-  float o = 0;
-  return color(d+tri.mat.m_col[0]+o,d+tri.mat.m_col[1]+o,d+tri.mat.m_col[2]+o);
-
+  return color(d+tri.mat.m_col[0],d+tri.mat.m_col[1],d+tri.mat.m_col[2]);
 }

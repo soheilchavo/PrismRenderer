@@ -2,10 +2,8 @@ ArrayList vertecies = new ArrayList<PVector>();
 
 ArrayList prims = new ArrayList<ArrayList<Triangle>>();
 
-//The order that the prims arraylist is in (in terms of name, ex: Cube: 1, Triangle: 2, etc)
-ArrayList prim_order = new ArrayList<String>();
+ArrayList prim_order = new ArrayList<String>(); //The order that the prims arraylist is in (in terms of name, ex: Cube: 1, Triangle: 2, etc)
 
-//Loads in the primatives from PrimativeData.txt
 void load_primatives()
 {
   File directory = new File(sketchPath("/ModelData/"));
@@ -15,8 +13,9 @@ void load_primatives()
     
     ArrayList<PVector> model_vertecies = new ArrayList<PVector>();
     ArrayList<Triangle> model_triangles = new ArrayList<Triangle>();
+    
     String modelName = modelData.getName();
-    prim_order.add(modelName.substring(0, modelName.length()-4));
+    prim_order.add(modelName.substring(0, modelName.length()-4));//substring removes .obj suffix
 
     try{
       String[] modelLines = loadStrings(modelData.getCanonicalPath());
@@ -51,23 +50,20 @@ void load_primatives()
       }
       
     }
-    catch(IOException ie) { print("non-existent model path"); }
+    catch(IOException ie) { throw new NullPointerException("non-existent model path"); }
 
     prims.add(model_triangles);
   }
 
 }
 
-//Adds new primative
 ArrayList<Triangle> get_prim_tris(String type, Material objmat)
 {
-  //Grab triangle info from prim array
   ArrayList<Triangle> prim_tris = (ArrayList<Triangle>) prims.get(prim_order.indexOf(type));
   ArrayList<Triangle> cloned_tris = new ArrayList<Triangle>();
 
   for (Triangle tri : prim_tris)
   {
-    //Clone the vertecies of the original primative so that we're not changing the base shape
     PVector[] cloned_verts = new PVector[3];
     for (int i = 0; i < tri.vertecies.length; i++)
     {
@@ -76,7 +72,7 @@ ArrayList<Triangle> get_prim_tris(String type, Material objmat)
       cloned_verts[i].y = tri.vertecies[i].y;
       cloned_verts[i].z = tri.vertecies[i].z;
     }
-    //Add new triangle to the list of triangles to be rendered every frame
+    
     Triangle cloned_triangle = new Triangle(cloned_verts, objmat);
     cloned_tris.add(cloned_triangle);
   }
